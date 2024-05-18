@@ -22,7 +22,7 @@ JNIEXPORT void JNICALL Java_HelloJNI_sayHello(JNIEnv *env, jobject thisObj) {
  * -I"$JAVA_HOME/include/linux" \ 
  * HelloJNI.c
  * 
- * gcc -Wall -fPIC -shared -o libHelloJNI.so -I"../java" -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" HelloJNI.c
+ * gcc -Wall -fPIC -shared -o libHelloJNI.so -I"../java" -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/linux" -ljvm HelloJNI.c
  * 
  * -Wall : Active les avertissements du compilateur pour les problèmes potentiels dans le code.
  * -fPIC : Crée un code indépendant de la position (PIC), adapté au lien dynamique.

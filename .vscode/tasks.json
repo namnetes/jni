@@ -1,0 +1,87 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Hello JNI Java",
+            "type": "shell",
+            "command": "(${env:JAVA_HOME}/bin/javac -h ${workspaceFolder}/src/include ${workspaceFolder}/src/java/HelloJNI.java -d ${workspaceFolder}/bin)",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Build Hello World Library",
+            "type": "shell",
+            "command": "gcc",
+            "linux": {
+                "args": [
+                    "-Wall",
+                    "-g",
+                    "${workspaceFolder}/src/c/HelloJNI.c",
+                    "-shared",
+                    "-o",
+                    "${workspaceFolder}/bin/libHelloJNI.so",
+                    "-I${env:JAVA_HOME}/include",
+                    "-I${env:JAVA_HOME}/include/linux",
+                    "-I${workspaceFolder}/src/include",
+                    "-L${env:JAVA_HOME}/lib/server/",
+                    "-ljvm"
+                ],
+            },
+            "windows": {
+                "args": [
+                    "-Wall",
+                    "-g",
+                    "${workspaceFolder}/src/c/HelloJNI.c",
+                    "-shared",
+                    "-o",
+                    "${workspaceFolder}/bin/libHelloJNI.dll",
+                    "-I${env:JAVA_HOME}/include",
+                    "-I${env:JAVA_HOME}/include/win32",
+                    "-I${workspaceFolder}/src/include",
+                    "-L${env:JAVA_HOME}/lib/server/",
+                    "-ljvm"
+                ],
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": "Build Hello JNI Java"
+        },
+        {
+            "label": "Build Hello JNI Python",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/src/python && . .venv/bin/activate && pyinstaller --onefile --distpath ${workspaceFolder}/bin HelloJNI.py && deactivate",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "dependsOn": "Build Hello World Library"
+        },
+        {
+            "label": "Run Hello JNI Java",
+            "type": "shell",
+            "command": "${env:JAVA_HOME}/bin/java -cp ${workspaceFolder}/bin -Djava.library.path=${workspaceFolder}/bin HelloJNI",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "dependsOn": "Build Hello World Library"
+        },
+        {
+            "label": "Run Hello JNI Python",
+            "type": "shell",
+            "command": "${workspaceFolder}/bin/HelloJNI ${workspaceFolder}/bin",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "dependsOn": "Build Hello JNI Python"
+        }
+    ]
+}
